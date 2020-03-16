@@ -23,7 +23,7 @@ const YT_COLUMN_TARGET = core.getInput("youtrackColumnTarget");
 const YT_ISSUE = "api/issues/";
 const REPO_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}`;
 const PR_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}/pull/${github.context.issue.number}`;
-const ISSUE_REGEX = new RegExp(`${YT_PROJECT_ID}-[0-9]+'`, "g");
+const ISSUE_REGEX = new RegExp(`${YT_PROJECT_ID}-[0-9]+`, "g");
 
 const ytApi = axios.create({
   headers: {
@@ -42,7 +42,7 @@ async function run() {
     const tickets = await getMatchingTickets();
 
     if (tickets.length === 0) {
-      throw "PR description does not contain any issue ID.";
+      throw new Error("PR description does not contain any issue ID.");
     }
 
     console.log(`Found issues: ${tickets.join(", ")}.`);
