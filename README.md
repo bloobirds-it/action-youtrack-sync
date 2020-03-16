@@ -4,6 +4,8 @@ Action for syncing with YouTrack boards. It works by doing the following:
 
 1. Create your desired ticket.
 
+![Imgur](https://i.imgur.com/L7NvsSc.png)
+
 2. Write your tickets on the pull request description.
 
 3. See them turn into links towards the linked YouTrack.
@@ -68,7 +70,7 @@ Issue ID prefix used in the projects. Basically the letters before your tickets.
 Name of the field which represents the ticket state.
 
 - **Required:** No
-- **Default:** "State"
+- **Default:** "Stage"
 
 #### `youtrackColumnTriggers`
 

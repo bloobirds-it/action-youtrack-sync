@@ -16,7 +16,7 @@ inputs:
     required: true
   youtrackColumnField:
     description: "Youtrack column name type"
-    default: "State"
+    default: "Stage"
   youtrackColumnTriggers:
     description: "Youtrack column names that trigger the action"
     default: "To Do, To Fix, In Progress"
