@@ -91,7 +91,7 @@ async function run() {
       YT_LABELS.forEach(label => {
         const type = fields.find(x => x.name === label);
 
-        if (type.value.name) {
+        if (type.value && type.value.name) {
           const value = type.value.name.toLowerCase();
 
           console.log(`Label PR with ${value}`);
