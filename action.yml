@@ -1,0 +1,36 @@
+name: "YouTrack Link"
+description: "Posts a comment with the YT issue link"
+inputs:
+  githubToken:
+    description: "GitHub Token"
+    required: true
+  youtrackProjectID:
+    description: "Issue ID prefix used in the projects"
+    required: true
+  youtrackUrl:
+    description: "Base URL of your YouTrack instance"
+    required: true
+    default: "https://my-yt.myjetbrains.com/youtrack"
+  youtrackToken:
+    description: "Youtrack permanent token"
+    required: true
+  youtrackColumnField:
+    description: "Youtrack column name type"
+    default: "State"
+  youtrackColumnTriggers:
+    description: "Youtrack column names that trigger the action"
+    default: "To Do, To Fix, In Progress"
+  youtrackColumnTarget:
+    description: "Youtrack column name to move issues on PR open"
+    default: "PR Open"
+  youtrackLabelFields:
+    description: "Youtrack fields from which label the PR"
+    default: "Type, Priority"
+  youtrackLabelPrefix:
+    description: "String to prefix your labels with"
+outputs:
+  issues:
+    description: "The ID of the related issues"
+runs:
+  using: "node12"
+  main: "dist/index.js"
