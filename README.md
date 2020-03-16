@@ -2,17 +2,29 @@
 
 Action for syncing with YouTrack boards. It works by doing the following:
 
-1. Create your desired ticket.
+1. Create your desired ticket(s).
 
 ![Imgur](https://i.imgur.com/L7NvsSc.png)
 
 2. Write your tickets on the pull request description.
 
+![Imgur](https://i.imgur.com/aJpoJCQ.png)
+
 3. See them turn into links towards the linked YouTrack.
 
-4. A comment with the status changed and the synced tickets will be written.
+![Imgur](https://i.imgur.com/ccEIvaf.png)
+
+4. A comment with the status changed and the synced tickets will be added.
+
+![Imgur](https://i.imgur.com/hGDI5lh.png)
 
 5. Your pull request will be labeled with the specified fields of the ticket. (priority, type, project...)
+
+![Imgur](https://i.imgur.com/wUHbZ4B.png)
+
+6. Finally your ticket(s) is moved to the specified column.
+
+![Imgur](https://i.imgur.com/115UBd6.png)
 
 ## Usage
 
