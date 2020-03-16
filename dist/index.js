@@ -910,7 +910,7 @@ const YT_PROJECT_ID = core.getInput("youtrackProjectID", { required: true });
 const YT_LABELS = core
   .getInput("youtrackLabelFields")
   .split(",")
-  .map(x => x.trim());
+  .map(x => x.trim().toLowerCase());
 
 const YT_COLUMN_TRIGGERS = core
   .getInput("youtrackColumnTriggers")
@@ -972,11 +972,8 @@ async function run() {
     tickets.forEach(async issueId => {
       const fields = await getFields(issueId);
 
-      console.log(JSON.stringify(fields));
       const state = fields.find(x => x.name === YT_COLUMN_FIELD);
-      console.log(JSON.stringify(state));
       const value = state.value && state.value.name.toLowerCase();
-      console.log(value);
 
       if (YT_COLUMN_TRIGGERS.some(x => x == value)) {
         const response = await moveIssueTarget(issueId, state.id);
@@ -991,13 +988,15 @@ async function run() {
       }
 
       YT_LABELS.forEach(label => {
-        const type = fields.find(x => x.name === label);
+        const type = fields.find(x => x.name.toLowerCase() === label);
 
         if (type && type.value && type.value.name) {
           const value = type.value.name.toLowerCase();
 
           console.log(`Label PR with ${value}`);
-          labelPR([`${YT_LABEL_PREFIX}${value.toLowerCase()}`]);
+          labelPR([
+            `${YT_LABEL_PREFIX}${type.name.toLowerCase()}/${value.toLowerCase()}`
+          ]);
         }
       });
     });
