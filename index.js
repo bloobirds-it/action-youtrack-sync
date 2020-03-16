@@ -73,8 +73,11 @@ async function run() {
     tickets.forEach(async issueId => {
       const fields = await getFields(issueId);
 
+      console.log(JSON.stringify(fields));
       const state = fields.find(x => x.name === YT_COLUMN_FIELD);
+      console.log(JSON.stringify(state));
       const value = state.value && state.value.name.toLowerCase();
+      console.log(value);
 
       if (YT_COLUMN_TRIGGERS.some(x => x == value)) {
         const response = await moveIssueTarget(issueId, state.id);
