@@ -915,7 +915,7 @@ const YT_LABELS = core
 const YT_COLUMN_TRIGGERS = core
   .getInput("youtrackColumnTriggers")
   .split(",")
-  .map(x => x.trim());
+  .map(x => x.trim().toLowerCase());
 
 const YT_COLUMN_TARGET = core.getInput("youtrackColumnTarget");
 
