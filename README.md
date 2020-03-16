@@ -48,7 +48,7 @@ jobs:
           youtrackProjectID: "BB"
 ```
 
-Know when you open a pull request make sure to write your tickets so the action can sync them.
+Now when you open a pull request make sure to write your tickets in the description so the action can sync them.
 
 ## Parameters
 
