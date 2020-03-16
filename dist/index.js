@@ -905,7 +905,7 @@ const GITHUB_TOKEN = core.getInput("githubToken");
 const YT_TOKEN = core.getInput("youtrackToken");
 const YT_URL = core.getInput("youtrackUrl");
 const YT_LABEL_PREFIX = core.getInput("youtrackLabelPrefix");
-const YT_COLUMN = core.getInput("youtrackColumnField");
+const YT_COLUMN_FIELD = core.getInput("youtrackColumnField");
 const YT_PROJECT_ID = core.getInput("youtrackProjectID", { required: true });
 const YT_LABELS = core
   .getInput("youtrackLabelFields")
@@ -972,7 +972,9 @@ async function run() {
     tickets.forEach(async issueId => {
       const fields = await getFields(issueId);
 
-      const state = fields.find(x => x.name === YT_COLUMN);
+      console.log(`Fetched fields: ${fields}`);
+
+      const state = fields.find(x => x.name === YT_COLUMN_FIELD);
       const value = state.value.name.toLowerCase();
 
       if (YT_COLUMN_TRIGGERS.some(x => x == value)) {
