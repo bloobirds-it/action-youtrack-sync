@@ -4,7 +4,7 @@ inputs:
   githubToken:
     description: "GitHub Token"
     required: true
-  youtrackProjectID:
+  youtrackProjectId:
     description: "Issue ID prefix used in the projects"
     required: true
   youtrackUrl:
@@ -28,9 +28,6 @@ inputs:
     default: "Type, Priority"
   youtrackLabelPrefix:
     description: "String to prefix your labels with"
-outputs:
-  issues:
-    description: "The ID of the related issues"
 runs:
   using: "node12"
   main: "dist/index.js"

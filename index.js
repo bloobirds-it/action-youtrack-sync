@@ -7,7 +7,7 @@ const YT_TOKEN = core.getInput("youtrackToken");
 const YT_URL = core.getInput("youtrackUrl");
 const YT_LABEL_PREFIX = core.getInput("youtrackLabelPrefix");
 const YT_COLUMN_FIELD = core.getInput("youtrackColumnField");
-const YT_PROJECT_ID = core.getInput("youtrackProjectID", { required: true });
+const YT_PROJECT_ID = core.getInput("youtrackProjectId", { required: true });
 const YT_LABELS = core
   .getInput("youtrackLabelFields")
   .split(",")
@@ -101,8 +101,6 @@ async function run() {
         }
       });
     });
-
-    core.setOutput("issues", tickets);
   } catch (error) {
     if (error.message !== `(s || "").replace is not a function`) {
       console.log(error.stack);
