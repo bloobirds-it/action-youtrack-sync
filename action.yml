@@ -28,6 +28,9 @@ inputs:
     default: "Type, Priority"
   youtrackLabelPrefix:
     description: "String to prefix your labels with"
+branding:
+  icon: "refresh-cw"
+  color: "gray-dark"
 runs:
   using: "node12"
   main: "dist/index.js"
