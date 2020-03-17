@@ -1,5 +1,5 @@
-name: "YouTrack Link"
-description: "Posts a comment with the YT issue link"
+name: "YouTrack Sync"
+description: "Syncs YouTrack with your pull requests"
 inputs:
   githubToken:
     description: "GitHub Token"
