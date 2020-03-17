@@ -948,17 +948,21 @@ async function run() {
     console.log(`Found issues: ${tickets.join(", ")}.`);
 
     tickets.forEach(async issueId => {
-      // Skip if ticket does not exist
-      if (!(await checkIssueExist(issueId))) return;
+      if (!(await checkIssueExist(issueId))) {
+        console.log(`(Skipping) ${issueId} does not exist`);
+        return;
+      }
 
       const fields = await getFields(issueId);
       const state = fields.find(x => x.name === YT_COLUMN_FIELD);
       const value = state.value && state.value.name.toLowerCase();
 
-      console.log(`Found ${fields.length} for issue ${issueId}`);
+      console.log(`Found ${fields.length} fields for issue ${issueId}`);
 
-      // Skip if ticket it not in the column triggers.
-      if (!YT_COLUMN_TRIGGERS.some(x => x == value)) return;
+      if (!YT_COLUMN_TRIGGERS.some(x => x == value)) {
+        console.log(`(Skipping) ${issueId} not found in column triggers`);
+        return;
+      }
 
       await commentYT(
         issueId,
@@ -987,11 +991,6 @@ async function run() {
         }
       });
     });
-    // await commentPR(
-    //   `Linked PR to issues:\n${tickets
-    //     .map(id => `- [${id}](${getIssueLink(id)})`)
-    //     .join("\n")}`
-    // );
   } catch (error) {
     if (error.message !== `(s || "").replace is not a function`) {
       console.log(error.stack);
@@ -1047,7 +1046,7 @@ async function checkIssueExist(issueId) {
   const response = await ytApi.get(`${issueId}`);
 
   if (response.status === 404) {
-    console.log(`Issue ${issueId} not found in your YouTrack instance.`);
+    console.log(`Issue ${issueId} not found in your YouTrack instance`);
     return false;
   } else if (response.statusText !== "OK") {
     console.log(`Unknown error connecting to YouTrack ${response.status}`);
