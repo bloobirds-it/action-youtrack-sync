@@ -994,7 +994,7 @@ async function run() {
 
     if (comments.length === 1) {
       await commentPR(
-        `Moved YouTrack issue ${comments[0]} to *${YT_COLUMN_TARGET}*`
+        `Moved YouTrack issue ${comments[0].slice(2)} to *${YT_COLUMN_TARGET}*`
       );
     } else if (comments.length > 1) {
       await commentPR(
