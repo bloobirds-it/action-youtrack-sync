@@ -46,63 +46,63 @@ jobs:
     steps:
       - uses: bloobirds-it/action-youtrack-sync@v1.0.0
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          youtrackUrl: ${{ secrets.YOUTRACK_URL }}
-          youtrackToken: ${{ secrets.YOUTRACK_TOKEN }}
-          youtrackProjectID: "BB"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          yt-url: ${{ secrets.YOUTRACK_URL }}
+          yt-token: ${{ secrets.YOUTRACK_TOKEN }}
+          yt-project-id: "BB"
 ```
 
 Now when you open a pull request make sure to write your tickets in the description so the action can sync them.
 
-## Parameters
+## Inputs
 
-#### `githubToken`
+#### `github-token`
 
 Usual GitHub token, one is available by default as `${{ secrets.GITHUB_TOKEN }}`.
 
 - **Required:** Yes
 
-#### `youtrackUrl`
+#### `yt-url`
 
 Base URL of your YouTrack instance.
 
 - **Required:** Yes
 - **Default:** "https://my-yt.myjetbrains.com/youtrack"
 
-#### `youtrackToken`
+#### `yt-token`
 
 YouTrack generated permanent token. For more info on [how to generate](https://www.jetbrains.com/help/youtrack/standalone/Manage-Permanent-Token.html).
 
 - **Required:** Yes
 
-#### `youtrackProjectId`
+#### `yt-project-id`
 
 Issue ID prefix used in the projects. Basically the letters before your tickets.
 
 - **Required:** Yes
 
-#### `youtrackColumnField`
+#### `yt-column-field`
 
 Name of the field which represents the ticket state.
 
 - **Required:** No
 - **Default:** "Stage"
 
-#### `youtrackColumnTriggers`
+#### `yt-column-triggers`
 
 From which columns is the card allowed move to the target.
 
 - **Required:** No
 - **Default:** "To Do, To Fix, In Progress"
 
-#### `youtrackColumnTarget`
+#### `yt-column-target`
 
 To which column should the related tickets be moved.
 
 - **Required:** No
 - **Default:** "PR Open"
 
-#### `youtrackLabelFields`
+#### `yt-label-fields`
 
 Which fields used to label the pull request.
 If for example you have a ticket with the fields `{Type: Feature, Priority: Low}`, the action will label the PR with `type/feature` and `priority/low`.
@@ -110,7 +110,7 @@ If for example you have a ticket with the fields `{Type: Feature, Priority: Low}
 - **Required:** No
 - **Default:** "Type, Priority"
 
-#### `youtrackLabelPrefix`
+#### `yt-label-prefix`
 
 A prefix to append to the label that the action generates. If you set it for example to `@yt/`, the generated labels will look like `@yt/type/feature`.
 

@@ -2,21 +2,21 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const axios = require("axios");
 
-const GITHUB_TOKEN = core.getInput("githubToken");
-const YT_TOKEN = core.getInput("youtrackToken");
-const YT_URL = core.getInput("youtrackUrl");
-const YT_LABEL_PREFIX = core.getInput("youtrackLabelPrefix");
-const YT_COLUMN_FIELD = core.getInput("youtrackColumnField");
-const YT_PROJECT_ID = core.getInput("youtrackProjectId");
+const GITHUB_TOKEN = core.getInput("github-token");
+const YT_TOKEN = core.getInput("yt-token");
+const YT_URL = core.getInput("yt-url");
+const YT_LABEL_PREFIX = core.getInput("yt-label-prefix");
+const YT_COLUMN_FIELD = core.getInput("yt-column-field");
+const YT_PROJECT_ID = core.getInput("yt-project-id");
 const YT_LABELS = core
-  .getInput("youtrackLabelFields")
+  .getInput("yt-label-fields")
   .split(",")
   .map(x => x.trim().toLowerCase());
 const YT_COLUMN_TRIGGERS = core
-  .getInput("youtrackColumnTriggers")
+  .getInput("yt-column-triggers")
   .split(",")
   .map(x => x.trim().toLowerCase());
-const YT_COLUMN_TARGET = core.getInput("youtrackColumnTarget");
+const YT_COLUMN_TARGET = core.getInput("yt-column-target");
 const YT_ISSUE = "api/issues/";
 const REPO_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}`;
 const PR_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}/pull/${github.context.issue.number}`;

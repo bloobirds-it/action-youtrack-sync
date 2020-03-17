@@ -1,32 +1,32 @@
 name: "YouTrack Sync"
 description: "Syncs YouTrack with your pull requests"
 inputs:
-  githubToken:
+  github-token:
     description: "GitHub Token"
     required: true
-  youtrackProjectId:
+  yt-project-id:
     description: "Issue ID prefix used in the projects"
     required: true
-  youtrackUrl:
+  yt-url:
     description: "Base URL of your YouTrack instance"
     required: true
     default: "https://my-yt.myjetbrains.com/youtrack"
-  youtrackToken:
+  yt-token:
     description: "Youtrack permanent token"
     required: true
-  youtrackColumnField:
+  yt-column-field:
     description: "Youtrack column name type"
     default: "Stage"
-  youtrackColumnTriggers:
+  yt-column-triggers:
     description: "Youtrack column names that trigger the action"
     default: "To Do, To Fix, In Progress"
-  youtrackColumnTarget:
+  yt-column-target:
     description: "Youtrack column name to move issues on PR open"
     default: "PR Open"
-  youtrackLabelFields:
+  yt-label-fields:
     description: "Youtrack fields from which label the PR"
     default: "Type, Priority"
-  youtrackLabelPrefix:
+  yt-label-prefix:
     description: "String to prefix your labels with"
 branding:
   icon: "refresh-cw"
