@@ -140,7 +140,7 @@ async function getMatchingTickets() {
   const description = await getPrDescription();
   const matches = [...description.matchAll(ISSUE_REGEX)];
 
-  return matches.map(x => x[0]);
+  return [...new Set(matches.map(x => x[0]))];
 }
 
 async function checkIssueExist(issueId) {
