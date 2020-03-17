@@ -12,14 +12,11 @@ const YT_LABELS = core
   .getInput("youtrackLabelFields")
   .split(",")
   .map(x => x.trim().toLowerCase());
-
 const YT_COLUMN_TRIGGERS = core
   .getInput("youtrackColumnTriggers")
   .split(",")
   .map(x => x.trim().toLowerCase());
-
 const YT_COLUMN_TARGET = core.getInput("youtrackColumnTarget");
-
 const YT_ISSUE = "api/issues/";
 const REPO_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}`;
 const PR_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}/pull/${github.context.issue.number}`;
@@ -48,7 +45,11 @@ async function run() {
 
     console.log(`Found issues: ${tickets.join(", ")}.`);
 
+    const comments = [];
+
     await asyncForEach(tickets, async issueId => {
+      console.log("\n");
+
       if (!(await checkIssueExist(issueId))) {
         console.log(`(Skipping) ${issueId} does not exist`);
         return;
@@ -57,8 +58,6 @@ async function run() {
       const fields = await getFields(issueId);
       const state = fields.find(x => x.name === YT_COLUMN_FIELD);
       const value = state.value && state.value.name.toLowerCase();
-
-      console.log(`Found ${fields.length} fields for issue ${issueId}`);
 
       if (!YT_COLUMN_TRIGGERS.some(x => x == value)) {
         console.log(`(Skipping) ${issueId} not found in column triggers`);
@@ -72,8 +71,8 @@ async function run() {
 
       await moveIssueTarget(issueId, state.id);
 
-      await commentPR(
-        `Issue [${issueId}](${getIssueLink(issueId)}) changed from *${
+      comments.push(
+        `[${issueId}](${getIssueLink(issueId)}) moved from *${
           state.value.name
         }* to *${YT_COLUMN_TARGET}*`
       );
@@ -92,6 +91,8 @@ async function run() {
         }
       });
     });
+
+    await commentPR(comments.join("\n"));
   } catch (error) {
     if (error.message !== `(s || "").replace is not a function`) {
       console.log(error.stack);
@@ -164,6 +165,8 @@ async function commentPR(body) {
     issue_number: github.context.issue.number,
     body
   });
+
+  console.log("Commented PR");
 }
 
 async function commentYT(issueId, text) {
