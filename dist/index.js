@@ -941,65 +941,57 @@ async function run() {
     const tickets = await getMatchingTickets();
 
     if (tickets.length === 0) {
-      throw new Error("PR description does not contain any issue ID.");
+      console.log("PR description does not contain any issue ID.");
+      return;
     }
 
     console.log(`Found issues: ${tickets.join(", ")}.`);
 
-    tickets.forEach(async id => await checkIssueExist(id));
-
-    await commentPR(
-      `Linked PR to issues:\n${tickets
-        .map(id => `- [${id}](${getIssueLink(id)})`)
-        .join("\n")}`
-    );
-
-    console.log("Commented PR with linked issues.");
-
     tickets.forEach(async issueId => {
+      // Skip if ticket does not exist
+      if (!(await checkIssueExist(issueId))) return;
+
+      const fields = await getFields(issueId);
+      const state = fields.find(x => x.name === YT_COLUMN_FIELD);
+      const value = state.value && state.value.name.toLowerCase();
+
+      console.log(`Found ${fields.length} for issue ${issueId}`);
+
+      // Skip if ticket it not in the column triggers.
+      if (!YT_COLUMN_TRIGGERS.some(x => x == value)) return;
+
       await commentYT(
         issueId,
         `New PR [#${github.context.issue.number}](${PR_URL}) opened at [${github.context.issue.owner}/${github.context.issue.repo}](${REPO_URL}) by ${github.context.actor}.`
       );
-    });
 
-    console.log(`Commented YT issues with the according PR.`);
+      await moveIssueTarget(issueId, state.id);
 
-    await updatePR();
+      await commentPR(
+        `Issue [${issueId}](${getIssueLink(issueId)}) changed from *${
+          state.value.name
+        }* to *${YT_COLUMN_TARGET}*`
+      );
 
-    console.log("Updated PR description with YT links.");
-
-    tickets.forEach(async issueId => {
-      const fields = await getFields(issueId);
-
-      const state = fields.find(x => x.name === YT_COLUMN_FIELD);
-      const value = state.value && state.value.name.toLowerCase();
-
-      if (YT_COLUMN_TRIGGERS.some(x => x == value)) {
-        const response = await moveIssueTarget(issueId, state.id);
-
-        console.log(`Changed issue to PR Open with status: ${response.status}`);
-
-        await commentPR(
-          `Issue [${issueId}](${getIssueLink(issueId)}) changed from *${
-            state.value.name
-          }* to *${YT_COLUMN_TARGET}*`
-        );
-      }
+      await updatePR(issueId);
 
       YT_LABELS.forEach(label => {
         const type = fields.find(x => x.name.toLowerCase() === label);
 
-        if (type && type.value && type.value.name) {
+        if (type && type.value && type.name && type.value.name) {
           const value = type.value.name.toLowerCase();
+          const name = type.name.toLowerCase();
 
-          console.log(`Label PR with ${value}`);
-          labelPR([
-            `${YT_LABEL_PREFIX}${type.name.toLowerCase()}/${value.toLowerCase()}`
-          ]);
+          console.log(`Label PR with ${value} from ticket ${issueId}`);
+          labelPR([`${YT_LABEL_PREFIX}${name}/${value}`]);
         }
       });
     });
+    // await commentPR(
+    //   `Linked PR to issues:\n${tickets
+    //     .map(id => `- [${id}](${getIssueLink(id)})`)
+    //     .join("\n")}`
+    // );
   } catch (error) {
     if (error.message !== `(s || "").replace is not a function`) {
       console.log(error.stack);
@@ -1009,7 +1001,7 @@ async function run() {
 }
 
 async function moveIssueTarget(issueId, stateId) {
-  return await ytApi.post(
+  const response = await ytApi.post(
     `${issueId}/fields/${stateId}?fields=name,id,value(name)`,
     {
       value: {
@@ -1017,6 +1009,10 @@ async function moveIssueTarget(issueId, stateId) {
       }
     }
   );
+
+  console.log(`Changed ${issueId} to PR Open. (Status: ${response.status})`);
+
+  return response;
 }
 
 async function labelPR(labels) {
@@ -1051,10 +1047,14 @@ async function checkIssueExist(issueId) {
   const response = await ytApi.get(`${issueId}`);
 
   if (response.status === 404) {
-    throw new Error(`Issue ${issueId} not found in your YouTrack instance.`);
+    console.log(`Issue ${issueId} not found in your YouTrack instance.`);
+    return false;
   } else if (response.statusText !== "OK") {
-    throw new Error(`Unknown error connecting to YouTrack ${response.status}`);
+    console.log(`Unknown error connecting to YouTrack ${response.status}`);
+    return false;
   }
+
+  return true;
 }
 
 async function commentPR(body) {
@@ -1067,16 +1067,24 @@ async function commentPR(body) {
 }
 
 async function commentYT(issueId, text) {
-  await ytApi.post(`${issueId}/comments`, {
+  const response = await ytApi.post(`${issueId}/comments`, {
     text,
     usesMarkdown: true
   });
+
+  console.log(
+    `Commented YT for issue ${issueId}. (Status: ${response.status})`
+  );
+
+  return response;
 }
 
-async function updatePR() {
+async function updatePR(issueId) {
   const description = await getPrDescription();
+
+  const regex = new RegExp(issueId, "g");
   const body = description.replace(
-    ISSUE_REGEX,
+    regex,
     ticket => `[${ticket}](${YT_URL}${ticket})`
   );
 
@@ -1086,6 +1094,8 @@ async function updatePR() {
     pull_number: github.context.issue.number,
     body
   });
+
+  console.log(`Updated PR for issue ${issueId}`);
 }
 
 async function getFields(issueId) {
