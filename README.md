@@ -1,6 +1,8 @@
 # action-youtrack-sync
 
-Action for syncing with YouTrack boards. It works by doing the following:
+> Action for syncing with YouTrack boards.
+
+Works by doing the following:
 
 1. Create your desired ticket(s).
 
@@ -25,6 +27,8 @@ Action for syncing with YouTrack boards. It works by doing the following:
 6. Finally your ticket(s) is moved to the specified column.
 
 ![Imgur](https://i.imgur.com/115UBd6.png)
+
+Goes well in combination with [action-youtrack-move](https://github.com/bloobirds-it/action-youtrack-move).
 
 ## Usage
 
@@ -54,7 +58,7 @@ Now when you open a pull request make sure to write your tickets in the descript
 
 #### `githubToken`
 
-Your usual GitHub token, one is available by default as `${{ secrets.GITHUB_TOKEN }}`.
+Usual GitHub token, one is available by default as `${{ secrets.GITHUB_TOKEN }}`.
 
 - **Required:** Yes
 
@@ -86,7 +90,7 @@ Name of the field which represents the ticket state.
 
 #### `youtrackColumnTriggers`
 
-Which columns will trigger the action. In other words, from which columns is the card allowed move to the target.
+From which columns is the card allowed move to the target.
 
 - **Required:** No
 - **Default:** "To Do, To Fix, In Progress"
