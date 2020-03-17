@@ -945,6 +945,7 @@ async function run() {
     console.log(`Found issues: ${tickets.join(", ")}.`);
 
     const comments = [];
+    const labels = [];
 
     await asyncForEach(tickets, async issueId => {
       console.log("\n");
@@ -971,10 +972,10 @@ async function run() {
       await moveIssueTarget(issueId, state.id);
 
       comments.push(
-        `[${issueId}](${getIssueLink(issueId)}) moved from *${
-          state.value.name
-        }* to *${YT_COLUMN_TARGET}*`
+        `- [${issueId}](${getIssueLink(issueId)}) from *${state.value.name}*`
       );
+
+      console.log(`Comment PR with ticket ${issueId}`);
 
       await updatePR(issueId);
 
@@ -985,13 +986,25 @@ async function run() {
           const value = type.value.name.toLowerCase();
           const name = type.name.toLowerCase();
 
-          console.log(`Label PR with ${value} from ticket ${issueId}`);
-          await labelPR([`${YT_LABEL_PREFIX}${name}/${value}`]);
+          console.log(`Label PR with "${value}" from ticket ${issueId}`);
+          labels.push(`${YT_LABEL_PREFIX}${name}/${value}`);
         }
       });
     });
 
-    await commentPR(comments.join("\n"));
+    if (comments.length === 1) {
+      await commentPR(
+        `Moved YouTrack issue ${comments[0]} to *${YT_COLUMN_TARGET}*`
+      );
+    } else if (comments.length > 1) {
+      await commentPR(
+        `Moved YouTrack issues to *${YT_COLUMN_TARGET}*\n` + comments.join("\n")
+      );
+    }
+
+    if (labels.length !== 0) {
+      await labelPR(labels);
+    }
   } catch (error) {
     if (error.message !== `(s || "").replace is not a function`) {
       console.log(error.stack);
