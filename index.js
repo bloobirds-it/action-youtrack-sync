@@ -48,7 +48,7 @@ async function run() {
 
     console.log(`Found issues: ${tickets.join(", ")}.`);
 
-    tickets.forEach(async issueId => {
+    await asyncForEach(tickets, async issueId => {
       if (!(await checkIssueExist(issueId))) {
         console.log(`(Skipping) ${issueId} does not exist`);
         return;
@@ -80,7 +80,7 @@ async function run() {
 
       await updatePR(issueId);
 
-      YT_LABELS.forEach(label => {
+      YT_LABELS.forEach(async label => {
         const type = fields.find(x => x.name.toLowerCase() === label);
 
         if (type && type.value && type.name && type.value.name) {
@@ -88,7 +88,7 @@ async function run() {
           const name = type.name.toLowerCase();
 
           console.log(`Label PR with ${value} from ticket ${issueId}`);
-          labelPR([`${YT_LABEL_PREFIX}${name}/${value}`]);
+          await labelPR([`${YT_LABEL_PREFIX}${name}/${value}`]);
         }
       });
     });
@@ -185,7 +185,7 @@ async function updatePR(issueId) {
   const regex = new RegExp(issueId, "g");
   const body = description.replace(
     regex,
-    ticket => `[${ticket}](${YT_URL}${ticket})`
+    ticket => `[${ticket}](${getIssueLink(issueId)})`
   );
 
   await octokit.pulls.update({
@@ -208,6 +208,12 @@ async function getFields(issueId) {
 
 function getIssueLink(id) {
   return `${YT_URL}issue/${id}`;
+}
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
 }
 
 run();
