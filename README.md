@@ -18,7 +18,7 @@ Works by doing the following:
 
 4. A comment with the status changed and the synced tickets will be added.
 
-![Imgur](https://i.imgur.com/hGDI5lh.png)
+![Imgur](https://i.imgur.com/hGDI5lh.png?1)
 
 5. Your pull request will be labeled with the specified fields of the ticket. (priority, type, project...)
 
