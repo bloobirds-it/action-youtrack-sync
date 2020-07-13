@@ -12,10 +12,6 @@ const YT_LABELS = core
   .getInput("yt-label-fields")
   .split(",")
   .map(x => x.trim().toLowerCase());
-const YT_COLUMN_TRIGGERS = core
-  .getInput("yt-column-triggers")
-  .split(",")
-  .map(x => x.trim().toLowerCase());
 const YT_COLUMN_TARGET = core.getInput("yt-column-target");
 const YT_ISSUE = "api/issues/";
 const REPO_URL = `https://github.com/${github.context.issue.owner}/${github.context.issue.repo}`;
@@ -59,11 +55,6 @@ async function run() {
       const fields = await getFields(issueId);
       const state = fields.find(x => x.name === YT_COLUMN_FIELD);
       const value = state.value && state.value.name.toLowerCase();
-
-      if (!YT_COLUMN_TRIGGERS.some(x => x == value)) {
-        console.log(`(Skipping) ${issueId} not found in column triggers`);
-        return;
-      }
 
       await commentYT(
         issueId,
